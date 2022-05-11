@@ -18,40 +18,30 @@ function cachingDecoratorNew(func) {
     }
     return wrapper;
 }
- 
+
 function debounceDecoratorNew(func, ms) {
-  let timer;
-  let flag = false;
-  if(flag === false){
-    func(...args);
-    flag = true;
-    timer = setTimeout(() => {
-      flag = false;
-    }, ms)
-  } else {
-    clearTimeout(timer)
-    timer = setTimeout(() => {flag = false}, ms);
-  }
+  let timer = null;  
+    function wrapper(...args) {
+      if (timer === null) {
+        func(...args);
+      }
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), ms);
+    }
     return wrapper;
 }
 
 function debounceDecorator2(func, ms) {
-  let timer;
-  let flag = false;
-  wrapper.count = 0;
-  
+  let timer = null;
+
     function wrapper(...args) {
-      wrapper.count++;
-      if(flag === false){
+      if (timer === null) {
         func(...args);
-        flag = true;
-        timer = setTimeout(() => {
-          flag = false;
-        }, ms)
-      } else {
-        clearTimeout(timer)
-        timer = setTimeout(() => {flag = false}, ms);
       }
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), ms);
+      wrapper.count++;
     }
+    wrapper.count = 0;
     return wrapper;
 }
